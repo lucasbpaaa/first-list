@@ -1,0 +1,22 @@
+#Question 1:
+
+#Vamos notar que o problema se trata de uma sequência de fibonacci em que os primeiros termos f1, f2 da sequência são 1, 2, respectivamente. 
+#A solução do problema para n escadas se dá por fn
+def fibonacci(n):
+    if n <= 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        fib = [1, 2] #Já vamos começar a lista com as condições de contorno da sequência: f1, f2
+        while len(fib) <= n:
+            new_term = fib[-1] + fib[-2] #Note que fn+2 = fn+1 + fn, para todo n natural maior do que ou igual a 1
+            fib.append(new_term)
+        return fib[n - 1]
+
+fibonacci(5)
+
+#Question 2:
+
+
+    
