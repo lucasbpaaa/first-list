@@ -1,18 +1,19 @@
+
 #Question 1:
 
 #Vamos notar que o problema se trata de uma sequência de fibonacci em que os primeiros termos f1, f2 da sequência são 1, 2, respectivamente. 
 #A solução do problema para n escadas se dá por fn
 def fibonacci(n):
-    if n <= 0:
-        return 0
-    elif n == 1:
-        return 1
-    else:
-        fib = [1, 2] #Já vamos começar a lista com as condições de contorno da sequência: f1, f2
-        while len(fib) <= n:
-            new_term = fib[-1] + fib[-2] #Note que fn+2 = fn+1 + fn, para todo n natural maior do que ou igual a 1
-            fib.append(new_term)
-        return fib[n - 1]
+   if n <= 0:
+       return 0
+   elif n == 1:
+       return 1
+   else:
+       fib = [1, 2] #Já vamos começar a lista com as condições de contorno da sequência: f1, f2
+       while len(fib) <= n:
+           new_term = fib[-1] + fib[-2] #Note que fn+2 = fn+1 + fn, para todo n natural maior do que ou igual a 1
+           fib.append(new_term)
+       return fib[n - 1]
 
 fibonacci(5)
 
@@ -21,120 +22,120 @@ fibonacci(5)
 from VectorSpace import VectorSpace
 
 class RealVector(VectorSpace):
-    _field = float
-    def __init__(self, dim, coord):
-        super().__init__(dim, self._field)
-        self.coord = coord
-    
+   _field = float
+   def __init__(self, dim, coord):
+       super().__init__(dim, self._field)
+       self.coord = coord
+   
 
-    @staticmethod
-    def _builder(coord):
-        raise NotImplementedError
-
-
-    def __add__(self, other_vector):
-        n_vector = []
-        for c1, c2 in zip(self.coord, other_vector.coord):
-            n_vector.append(c1+c2)
-        return self._builder(n_vector)
+   @staticmethod
+   def _builder(coord):
+       return RealVector(coord)
 
 
-    def __mul__(self, alpha):
-        n_vector = []
-        for c in self.coord:
-            n_vector.append(alpha*c)
-        return self._builder(n_vector)
-    
-    
-    def iner_prod(self, other_vector):
-        res = 0
-        for c1, c2 in zip(self.coord, other_vector.coord):
-            res += c1*c2
-        return res
+   def __add__(self, other_vector):
+       n_vector = []
+       for c1, c2 in zip(self.coord, other_vector.coord):
+           n_vector.append(c1+c2)
+       return self._builder(n_vector)
 
 
-    def __str__(self):
-        ls = ['[']
-        for c in self.coord[:-1]:
-            ls += [f'{c:2.2f}, ']
-        ls += f'{self.coord[-1]:2.2f}]'
-        s =  ''.join(ls)
-        return s
+   def __mul__(self, alpha):
+       n_vector = []
+       for c in self.coord:
+           n_vector.append(alpha*c)
+       return self._builder(n_vector)
+   
+   
+   def iner_prod(self, other_vector):
+       res = 0
+       for c1, c2 in zip(self.coord, other_vector.coord):
+           res += c1*c2
+       return res
+
+
+   def __str__(self):
+       ls = ['[']
+       for c in self.coord[:-1]:
+           ls += [f'{c:2.2f}, ']
+       ls += f'{self.coord[-1]:2.2f}]'
+       s =  ''.join(ls)
+       return s
 
 class Vector2D(RealVector):
-    _dim = 2
-    def __init__(self, coord):
-        if len(coord) != 2:
-            raise ValueError
-        super().__init__(self._dim, coord)
+   _dim = 2
+   def __init__(self, coord):
+       if len(coord) != 2:
+           raise ValueError
+       super().__init__(self._dim, coord)
 
 
-    @staticmethod
-    def _builder(coord):
-        return Vector2D(coord)
-    
+   @staticmethod
+   def _builder(coord):
+       return Vector2D(coord)
+   
 
-    def __add__(self, other_vector):
-        n_vector = []
-        for c1, c2 in zip(self.coord, other_vector.coord):
-            n_vector.append(c1 + c2)
-        return self._builder(n_vector)
+   def __add__(self, other_vector):
+       n_vector = []
+       for c1, c2 in zip(self.coord, other_vector.coord):
+           n_vector.append(c1 + c2)
+       return self._builder(n_vector)
 
-    def __sub__(self, other_vector):
-        n_vector = []
-        for c1, c2 in zip(self.coord, other_vector.coord):
-            n_vector.append(c1 - c2)
-        return self._builder(n_vector)
+   def __sub__(self, other_vector):
+       n_vector = []
+       for c1, c2 in zip(self.coord, other_vector.coord):
+           n_vector.append(c1 - c2)
+       return self._builder(n_vector)
 
-    def __mul__(self, alpha):
-        n_vector = []
-        for c in self.coord:
-            n_vector.append(alpha * c)
-        return self._builder(n_vector)
+   def __mul__(self, alpha):
+       n_vector = []
+       for c in self.coord:
+           n_vector.append(alpha * c)
+       return self._builder(n_vector)
 
-    def __neg__(self):
-        return self._builder([-c for c in self.coord])
+   def __neg__(self):
+       return self._builder([-c for c in self.coord])
 
-    def __abs__(self):
-        return sum(c**2 for c in self.coord)**0.5
+   def __abs__(self):
+       return sum(c**2 for c in self.coord)**0.5
 
-    def CW(self):
-        return Vector2D([-self.coord[1], self.coord[0]])
+   def CW(self):
+       return Vector2D([-self.coord[1], self.coord[0]])
 
-    def CCW(self):
-        return Vector2D([self.coord[1], -self.coord[0]])
+   def CCW(self):
+       return Vector2D([self.coord[1], -self.coord[0]])
 
 
 if __name__ == '__main__':
-    V2 = Vector2D([1, 2])
-    print('V2 = ', V2)
-    W2 = Vector2D([3, 4])
-    print('W2 = ', W2)
+   V2 = Vector2D([1, 2])
+   print('V2 = ', V2)
+   W2 = Vector2D([3, 4])
+   print('W2 = ', W2)
 
-    print(V2.getVectorSpace())
+   print(V2.getVectorSpace())
 
-    # Operações U + V
-    r = V2 + W2
-    print('V2 + W2 =', r)
+   # Operações U + V
+   r = V2 + W2
+   print('V2 + W2 =', r)
 
-    # Operações U - V
-    r = V2 - W2
-    print('V2 - W2 =', r)
+   # Operações U - V
+   r = V2 - W2
+   print('V2 - W2 =', r)
 
-    # Operação aV (multiplicação por escalar)
-    r = 4 * V2
-    print('4 * V2 =', r)
+   # Operação aV (multiplicação por escalar)
+   r = 4 * V2
+   print('4 * V2 =', r)
 
-    # Operação -V (negação)
-    r = -V2
-    print('-V2 =', r)
+   # Operação -V (negação)
+   r = -V2
+   print('-V2 =', r)
 
-    # Operação abs(V) (norma euclidiana)
-    r = abs(V2)
-    print('abs(V2) =', r)
+   # Operação abs(V) (norma euclidiana)
+   r = abs(V2)
+   print('abs(V2) =', r)
 
-    # Produto interno
-    print('V2.iner_prod(W2) = ', V2.iner_prod(W2))
+   # Produto interno
+   print('V2.iner_prod(W2) = ', V2.iner_prod(W2))
 
 
 #Question 3:
@@ -142,121 +143,121 @@ if __name__ == '__main__':
 from VectorSpace import VectorSpace
 
 class Vector3D(VectorSpace):
-    """Subclasse de VectorSpace para vetores no espaço tridimensional R3."""
-    _dim = 3
+   """Subclasse de VectorSpace para vetores no espaço tridimensional R3."""
+   _dim = 3
 
-    def __init__(self, coord):
-        if len(coord) != 3:
-            raise ValueError("Coordenadas devem ter 3 dimensões.")
-        super().__init__(self._dim, float)  # O campo é float, representando vetores reais
-        self.coord = coord
+   def __init__(self, coord):
+       if len(coord) != 3:
+           raise ValueError("Coordenadas devem ter 3 dimensões.")
+       super().__init__(self._dim, float)  # O campo é float, representando vetores reais
+       self.coord = coord
 
-    @staticmethod
-    def _builder(coord):
-        return Vector3D(coord)
+   @staticmethod
+   def _builder(coord):
+       return Vector3D(coord)
 
-    def __add__(self, other_vector):
-        if len(other_vector.coord) != 3:
-            raise ValueError("Operação só é possível com vetores de dimensão 3.")
-        n_vector = [c1 + c2 for c1, c2 in zip(self.coord, other_vector.coord)]
-        return self._builder(n_vector)
+   def __add__(self, other_vector):
+       if len(other_vector.coord) != 3:
+           raise ValueError("Operação só é possível com vetores de dimensão 3.")
+       n_vector = [c1 + c2 for c1, c2 in zip(self.coord, other_vector.coord)]
+       return self._builder(n_vector)
 
-    def __sub__(self, other_vector):
-        if len(other_vector.coord) != 3:
-            raise ValueError("Operação só é possível com vetores de dimensão 3.")
-        n_vector = [c1 - c2 for c1, c2 in zip(self.coord, other_vector.coord)]
-        return self._builder(n_vector)
+   def __sub__(self, other_vector):
+       if len(other_vector.coord) != 3:
+           raise ValueError("Operação só é possível com vetores de dimensão 3.")
+       n_vector = [c1 - c2 for c1, c2 in zip(self.coord, other_vector.coord)]
+       return self._builder(n_vector)
 
-    def __mul__(self, alpha):
-        n_vector = [alpha * c for c in self.coord]
-        return self._builder(n_vector)
+   def __mul__(self, alpha):
+       n_vector = [alpha * c for c in self.coord]
+       return self._builder(n_vector)
 
-    def __neg__(self):
-        return self._builder([-c for c in self.coord])
+   def __neg__(self):
+       return self._builder([-c for c in self.coord])
 
-    def __abs__(self):
-        return sum(c**2 for c in self.coord)**0.5
+   def __abs__(self):
+       return sum(c**2 for c in self.coord)**0.5
 
-    def iner_prod(self, other_vector):
-        if len(other_vector.coord) != 3:
-            raise ValueError("Operação só é possível com vetores de dimensão 3.")
-        return sum(c1 * c2 for c1, c2 in zip(self.coord, other_vector.coord))
+   def iner_prod(self, other_vector):
+       if len(other_vector.coord) != 3:
+           raise ValueError("Operação só é possível com vetores de dimensão 3.")
+       return sum(c1 * c2 for c1, c2 in zip(self.coord, other_vector.coord))
 
-    def __str__(self):
-        return f'[{", ".join(f"{c:2.2f}" for c in self.coord)}]'
+   def __str__(self):
+       return f'[{", ".join(f"{c:2.2f}" for c in self.coord)}]'
 
 
 class Polynomial(VectorSpace):
-    """Classe para polinômios com coeficientes reais."""
-    def __init__(self, coeffs):
-        super().__init__(dim=len(coeffs), field=float)
-        self.coeffs = coeffs  # Coeficientes do polinômio (do termo de grau mais alto ao constante)
+   """Classe para polinômios com coeficientes reais."""
+   def __init__(self, coeffs):
+       super().__init__(dim=len(coeffs), field=float)
+       self.coeffs = coeffs  # Coeficientes do polinômio (do termo de grau mais alto ao constante)
 
-    def __add__(self, other_poly):
-        # Somar os polinômios ajustando os graus
-        max_len = max(len(self.coeffs), len(other_poly.coeffs))
-        new_coeffs = [0] * max_len
-        for i in range(max_len):
-            c1 = self.coeffs[i] if i < len(self.coeffs) else 0
-            c2 = other_poly.coeffs[i] if i < len(other_poly.coeffs) else 0
-            new_coeffs[i] = c1 + c2
-        return Polynomial(new_coeffs)
+   def __add__(self, other_poly):
+       # Somar os polinômios ajustando os graus
+       max_len = max(len(self.coeffs), len(other_poly.coeffs))
+       new_coeffs = [0] * max_len
+       for i in range(max_len):
+           c1 = self.coeffs[i] if i < len(self.coeffs) else 0
+           c2 = other_poly.coeffs[i] if i < len(other_poly.coeffs) else 0
+           new_coeffs[i] = c1 + c2
+       return Polynomial(new_coeffs)
 
-    def __mul__(self, scalar):
-        # Multiplicar cada coeficiente pelo escalar
-        new_coeffs = [scalar * c for c in self.coeffs]
-        return Polynomial(new_coeffs)
+   def __mul__(self, scalar):
+       # Multiplicar cada coeficiente pelo escalar
+       new_coeffs = [scalar * c for c in self.coeffs]
+       return Polynomial(new_coeffs)
 
-    def __neg__(self):
-        return Polynomial([-c for c in self.coeffs])
+   def __neg__(self):
+       return Polynomial([-c for c in self.coeffs])
 
-    def __str__(self):
-        terms = []
-        for i, coeff in enumerate(self.coeffs):
-            degree = len(self.coeffs) - i - 1
-            if coeff != 0:
-                term = f"{coeff}x^{degree}" if degree > 0 else str(coeff)
-                terms.append(term)
-        return " + ".join(terms)
+   def __str__(self):
+       terms = []
+       for i, coeff in enumerate(self.coeffs):
+           degree = len(self.coeffs) - i - 1
+           if coeff != 0:
+               term = f"{coeff}x^{degree}" if degree > 0 else str(coeff)
+               terms.append(term)
+       return " + ".join(terms)
 
 
 # Teste de interações entre as subclasses
 if __name__ == '__main__':
-    # Vetores em R3
-    V3 = Vector3D([1, 2, 3])
-    W3 = Vector3D([4, 5, 6])
-    print('V3 =', V3)
-    print('W3 =', W3)
+   # Vetores em R3
+   V3 = Vector3D([1, 2, 3])
+   W3 = Vector3D([4, 5, 6])
+   print('V3 =', V3)
+   print('W3 =', W3)
 
-    # Soma de vetores
-    print('V3 + W3 =', V3 + W3)
+   # Soma de vetores
+   print('V3 + W3 =', V3 + W3)
 
-    # Subtração de vetores
-    print('V3 - W3 =', V3 - W3)
+   # Subtração de vetores
+   print('V3 - W3 =', V3 - W3)
 
-    # Multiplicação por escalar
-    print('2 * V3 =', 2 * V3)
+   # Multiplicação por escalar
+   print('2 * V3 =', 2 * V3)
 
-    # Norma (abs)
-    print('abs(V3) =', abs(V3))
+   # Norma (abs)
+   print('abs(V3) =', abs(V3))
 
-    # Produto interno
-    print('V3.iner_prod(W3) =', V3.iner_prod(W3))
+   # Produto interno
+   print('V3.iner_prod(W3) =', V3.iner_prod(W3))
 
-    # Polinômios
-    P1 = Polynomial([1, -2, 3])  # Representa o polinômio 1x^2 - 2x + 3
-    P2 = Polynomial([2, 3])  # Representa o polinômio 2x + 3
-    print('P1 =', P1)
-    print('P2 =', P2)
+   # Polinômios
+   P1 = Polynomial([1, -2, 3])  # Representa o polinômio 1x^2 - 2x + 3
+   P2 = Polynomial([2, 3])  # Representa o polinômio 2x + 3
+   print('P1 =', P1)
+   print('P2 =', P2)
 
-    # Soma de polinômios
-    print('P1 + P2 =', P1 + P2)
+   # Soma de polinômios
+   print('P1 + P2 =', P1 + P2)
 
-    # Multiplicação de polinômio por escalar
-    print('2 * P1 =', 2 * P1)
+   # Multiplicação de polinômio por escalar
+   print('2 * P1 =', 2 * P1)
 
-    # Negação de polinômio
-    print('-P1 =', -P1)
+   # Negação de polinômio
+   print('-P1 =', -P1)
 
 
 #Question 5:
@@ -267,21 +268,23 @@ import random
 Card = collections.namedtuple('Card', ['rank', 'suit'])
 
 class FrenchDeck:
-    ranks = [str(n) for n in range(2, 11)] + list('JQKA')
-    suits = 'spades diamonds clubs hearts'.split()
+   ranks = [str(n) for n in range(2, 11)] + list('JQKA')
+   suits = 'spades diamonds clubs hearts'.split()
 
-    def __init__(self):
-        self._cards = [Card(rank, suit) for suit in self.suits
-        for rank in self.ranks]
+   def __init__(self):
+       self._cards = [Card(rank, suit) for suit in self.suits
+       for rank in self.ranks]
 
-    def __len__(self):
-        return len(self._cards)
+   def __len__(self):
+       return len(self._cards)
 
-    def __getitem__(self, position):
-        return self._cards[position]
+   def __getitem__(self, position):
+       return self._cards[position]
+   
+   def __setitem__(self, poss, value):
+       self._cards[poss] = value
 
-    def shuffle(self):
-        random.shuffle(self._cards)
+myDeck = FrenchDeck()
+print(myDeck[1])
+random.shuffle(myDeck)
 
-
-    
